@@ -1,6 +1,8 @@
 // Helper function to extract the 'posts' object from the API response
-const extractPosts = (data) => {
+export const extractPosts = (data) => {
     return data?.response?.posts || [];
   };
 
-  export default extractPosts;
+  export const extractMedia = (data) => {
+    return data?.response?.media || [];
+  };
