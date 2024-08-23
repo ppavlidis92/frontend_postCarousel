@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { fetchPosts } from "./services/postsApiService"; 
+import { fetchPosts } from "./services/postsApiService";
 import { fetchMediaById } from "./services/mediaApiService";
 import { fetchUserByUsername } from "./services/userApiService";
 
@@ -45,9 +45,16 @@ const Home = () => {
     const loadPosts = async () => {
       try {
         console.log(`Fetching posts with offset ${offset}...`);
-        const postsWithMediaAndUser = await fetchPosts(offset);
-        setPosts(postsWithMediaAndUser);
-        setLoading(true);  // Start processing the fetched posts
+        const postsData = await fetchPosts(offset);
+
+        if (postsData.length === 0) {
+          // If no more posts are available, reset offset to 1
+          setOffset(1);
+          setLoading(false);
+        } else {
+          setPosts(postsData);
+          setLoading(true); // Start processing the fetched posts
+        }
       } catch (error) {
         console.error("Failed to load posts:", error);
       }
@@ -65,9 +72,9 @@ const Home = () => {
           if (intervalId) {
             clearInterval(intervalId);
           }
-          setLoading(false);  // Stop the current loading process
-          setCurrentIndex(0);  // Reset the index for the next set
-          setOffset((prevOffset) => prevOffset + 1);  // Increment the offset
+          setLoading(false); // Stop the current loading process
+          setCurrentIndex(0); // Reset the index for the next set
+          setOffset((prevOffset) => prevOffset + 1); // Increment the offset
           return;
         }
 
@@ -133,7 +140,9 @@ const Home = () => {
                       width={100}
                       height={100}
                     />
-                    <Typography>{`Likes: ${post.media.statistics.likes}`} </Typography>
+                    <Typography>
+                      {`Likes: ${post.media.statistics.likes}`}{" "}
+                    </Typography>
                   </div>
                 )}
                 {post.userData && (
