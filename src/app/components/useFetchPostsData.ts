@@ -6,17 +6,23 @@ import { fetchUserByUsername } from "../services/userApiService";
 interface Media {
   urls: {
     thumb: string;
+    full: string;
   };
   type: string;
   statistics: {
     likes: number;
+    created: number;
   };
 }
 
 interface User {
   first_name: string;
   last_name: string;
-  email: string;
+  profile_images: {
+    small: string;
+    medium: string;
+    full: string;
+  };
 }
 
 interface Post {
@@ -71,7 +77,9 @@ const useFetchPostsData = () => {
           const mediaData = await fetchMediaById(post.mediaId);
           if (mediaData) {
             setPosts((prevPosts) =>
-              prevPosts.map((p, i) => (i === currentIndex ? { ...p, media: mediaData } : p))
+              prevPosts.map((p, i) =>
+                i === currentIndex ? { ...p, media: mediaData } : p
+              )
             );
           }
         }
@@ -81,7 +89,9 @@ const useFetchPostsData = () => {
           const userData = await fetchUserByUsername(post.user.username);
           if (userData) {
             setPosts((prevPosts) =>
-              prevPosts.map((p, i) => (i === currentIndex ? { ...p, userData: userData } : p))
+              prevPosts.map((p, i) =>
+                i === currentIndex ? { ...p, userData: userData } : p
+              )
             );
           }
         }

@@ -4,10 +4,12 @@ import { extractMedia } from "../utils";
 interface Media {
   urls: {
     thumb: string;
+    full: string;
   };
   type: string;
   statistics: {
     likes: number;
+    created: number;
   };
 }
 

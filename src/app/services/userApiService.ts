@@ -4,7 +4,11 @@ import { extractUser } from "../utils";
 interface User {
   first_name: string;
   last_name: string;
-  email: string;
+  profile_images: {
+    medium: string;
+    small: string; 
+    full: string;
+  };
 }
 
 export const fetchUserByUsername = async (username: string): Promise<User | null> => {
