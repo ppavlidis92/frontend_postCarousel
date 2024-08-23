@@ -41,6 +41,7 @@ const Home = () => {
   const [offset, setOffset] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Fetch posts on offset change
   useEffect(() => {
     const loadPosts = async () => {
       try {
@@ -63,57 +64,83 @@ const Home = () => {
     loadPosts();
   }, [offset]); // Runs when offset changes
 
+  // Handle immediate fetching for the first post
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | null = null;
+    const fetchFirstPostData = async () => {
+      if (posts.length > 0 && currentIndex === 0) {
+        const post = posts[0];
 
-    if (posts.length > 0 && loading) {
-      intervalId = setInterval(async () => {
-        if (currentIndex >= posts.length) {
-          if (intervalId) {
-            clearInterval(intervalId);
-          }
-          setLoading(false); // Stop the current loading process
-          setCurrentIndex(0); // Reset the index for the next set
-          setOffset((prevOffset) => prevOffset + 1); // Increment the offset
-          return;
-        }
-
-        const post = posts[currentIndex];
-
-        // Fetch media data
+        // Fetch media data immediately for the first post
         if (post.mediaId) {
           const mediaData = await fetchMediaById(post.mediaId);
           if (mediaData) {
             setPosts((prevPosts) =>
-              prevPosts.map((p, i) =>
-                i === currentIndex ? { ...p, media: mediaData } : p
-              )
+              prevPosts.map((p, i) => (i === 0 ? { ...p, media: mediaData } : p))
             );
           }
         }
 
-        // Fetch user data
+        // Fetch user data immediately for the first post
         if (post.user?.username) {
           const userData = await fetchUserByUsername(post.user.username);
           if (userData) {
             setPosts((prevPosts) =>
-              prevPosts.map((p, i) =>
-                i === currentIndex ? { ...p, userData: userData } : p
-              )
+              prevPosts.map((p, i) => (i === 0 ? { ...p, userData: userData } : p))
             );
           }
         }
 
-        setCurrentIndex((prevIndex) => prevIndex + 1);
-      }, 4000); // 4 seconds delay between each fetch
-    }
-
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
+        setCurrentIndex(1); // Move to the next post for the delayed processing
       }
     };
-  }, [posts, currentIndex, loading]); // Runs when posts, currentIndex, or loading changes
+
+    fetchFirstPostData();
+  }, [posts]); // Only depends on posts to run once after posts are set
+
+  // Handle delayed fetching for remaining posts
+  useEffect(() => {
+    if (currentIndex > 0 && loading) {
+      const fetchRemainingPostData = async () => {
+        if (currentIndex < posts.length) {
+          const post = posts[currentIndex];
+
+          // Fetch media data
+          if (post.mediaId) {
+            const mediaData = await fetchMediaById(post.mediaId);
+            if (mediaData) {
+              setPosts((prevPosts) =>
+                prevPosts.map((p, i) =>
+                  i === currentIndex ? { ...p, media: mediaData } : p
+                )
+              );
+            }
+          }
+
+          // Fetch user data
+          if (post.user?.username) {
+            const userData = await fetchUserByUsername(post.user.username);
+            if (userData) {
+              setPosts((prevPosts) =>
+                prevPosts.map((p, i) =>
+                  i === currentIndex ? { ...p, userData: userData } : p
+                )
+              );
+            }
+          }
+
+          setCurrentIndex((prevIndex) => prevIndex + 1);
+        } else {
+          setLoading(false); // Stop the current loading process
+          setCurrentIndex(0); // Reset the index for the next set
+          setOffset((prevOffset) => prevOffset + 1); // Increment the offset
+        }
+      };
+
+      const intervalId = setInterval(fetchRemainingPostData, 4000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [currentIndex, loading, posts.length]); // Depends on currentIndex, loading, and posts length
 
   return (
     <main className={styles.main}>
@@ -140,9 +167,7 @@ const Home = () => {
                       width={100}
                       height={100}
                     />
-                    <Typography>
-                      {`Likes: ${post.media.statistics.likes}`}{" "}
-                    </Typography>
+                    <Typography>{`Likes: ${post.media.statistics.likes}`}</Typography>
                   </div>
                 )}
                 {post.userData && (
