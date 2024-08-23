@@ -38,30 +38,36 @@ interface Post {
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [offset, setOffset] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        console.log("Fetching posts...");
-        const postsWithMediaAndUser = await fetchPosts(1);
+        console.log(`Fetching posts with offset ${offset}...`);
+        const postsWithMediaAndUser = await fetchPosts(offset);
         setPosts(postsWithMediaAndUser);
+        setLoading(true);  // Start processing the fetched posts
       } catch (error) {
         console.error("Failed to load posts:", error);
       }
     };
 
     loadPosts();
-  }, []); 
+  }, [offset]); // Runs when offset changes
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
 
-    if (posts.length > 0) {
+    if (posts.length > 0 && loading) {
       intervalId = setInterval(async () => {
         if (currentIndex >= posts.length) {
           if (intervalId) {
             clearInterval(intervalId);
           }
+          setLoading(false);  // Stop the current loading process
+          setCurrentIndex(0);  // Reset the index for the next set
+          setOffset((prevOffset) => prevOffset + 1);  // Increment the offset
           return;
         }
 
@@ -100,7 +106,7 @@ const Home = () => {
         clearInterval(intervalId);
       }
     };
-  }, [posts]); // Only runs when posts are first set
+  }, [posts, currentIndex, loading]); // Runs when posts, currentIndex, or loading changes
 
   return (
     <main className={styles.main}>

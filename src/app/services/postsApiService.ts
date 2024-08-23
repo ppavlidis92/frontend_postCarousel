@@ -14,7 +14,7 @@ export const fetchPosts = async (setOffSet: number): Promise<Post[]> => {
   try {
     // Fetch all posts
     const postsResponse = await axios.get(
-      `https://apis.slstice.com/mock/posts?offset=${setOffSet}&limit=20&api_key=${process.env.NEXT_PUBLIC_API_KEY}`
+      `https://apis.slstice.com/mock/posts?offset=${setOffSet}&limit=2&api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const postsData: Post[] = extractPosts(postsResponse.data);
 
