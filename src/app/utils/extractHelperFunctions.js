@@ -6,3 +6,7 @@ export const extractPosts = (data) => {
   export const extractMedia = (data) => {
     return data?.response?.media || [];
   };
+
+  export const extractUser = (data) => {
+    return data?.response?.user || [];
+  };
