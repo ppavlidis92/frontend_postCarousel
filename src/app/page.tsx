@@ -20,7 +20,7 @@ const Home = () => {
           // When the last post is displayed, load the next set of posts
           setOffset((prevOffset) => prevOffset + 1);
         }
-      }, 111116000); // Display each post for 6 seconds
+      }, 6000); // Display each post for 6 seconds
 
       return () => clearInterval(intervalId);
     }
