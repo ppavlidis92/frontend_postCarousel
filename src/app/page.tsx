@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { fetchPostsWithMediaAndUser } from "./services/apiService"; // Adjust the path as necessary
+import { fetchPosts } from "./services/postsApiService"; 
+import { fetchMediaById } from "./services/mediaApiService";
+import { fetchUserByUsername } from "./services/userApiService";
 
 interface Media {
   urls: {
@@ -35,12 +37,13 @@ interface Post {
 
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
     const loadPosts = async () => {
       try {
         console.log("Fetching posts...");
-        const postsWithMediaAndUser = await fetchPostsWithMediaAndUser();
+        const postsWithMediaAndUser = await fetchPosts(1);
         setPosts(postsWithMediaAndUser);
       } catch (error) {
         console.error("Failed to load posts:", error);
@@ -48,9 +51,56 @@ const Home = () => {
     };
 
     loadPosts();
-  }, []); // Empty array ensures this runs only once
+  }, []); 
 
-  console.log(posts);
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    if (posts.length > 0) {
+      intervalId = setInterval(async () => {
+        if (currentIndex >= posts.length) {
+          if (intervalId) {
+            clearInterval(intervalId);
+          }
+          return;
+        }
+
+        const post = posts[currentIndex];
+
+        // Fetch media data
+        if (post.mediaId) {
+          const mediaData = await fetchMediaById(post.mediaId);
+          if (mediaData) {
+            setPosts((prevPosts) =>
+              prevPosts.map((p, i) =>
+                i === currentIndex ? { ...p, media: mediaData } : p
+              )
+            );
+          }
+        }
+
+        // Fetch user data
+        if (post.user?.username) {
+          const userData = await fetchUserByUsername(post.user.username);
+          if (userData) {
+            setPosts((prevPosts) =>
+              prevPosts.map((p, i) =>
+                i === currentIndex ? { ...p, userData: userData } : p
+              )
+            );
+          }
+        }
+
+        setCurrentIndex((prevIndex) => prevIndex + 1);
+      }, 4000); // 4 seconds delay between each fetch
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [posts]); // Only runs when posts are first set
 
   return (
     <main className={styles.main}>
