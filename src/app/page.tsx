@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Typography, Box, Avatar } from "@mui/material";
+import { Typography, Box, Avatar, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import styles from "./page.module.css";
 import useFetchPostsData from "./components/useFetchPostsData";
@@ -10,6 +10,11 @@ import { convertEpochToDate } from "./utils";
 const Home = () => {
   const { posts, currentIndex, setCurrentIndex, setOffset } =
     useFetchPostsData();
+
+  // Media queries for different screen sizes
+  const isLargeScreen = useMediaQuery("(min-width:1200px)");
+  const isMediumScreen = useMediaQuery("(min-width:768px) and (max-width:1199px)");
+  const isSmallScreen = useMediaQuery("(max-width:767px)");
 
   useEffect(() => {
     if (posts.length > 0) {
@@ -20,11 +25,40 @@ const Home = () => {
           // When the last post is displayed, load the next set of posts
           setOffset((prevOffset) => prevOffset + 1);
         }
-      }, 6000); // Display each post for 6 seconds
+      }, 16000); // Display each post for 6 seconds
 
       return () => clearInterval(intervalId);
     }
   }, [currentIndex, posts.length, setCurrentIndex, setOffset]);
+
+  // Determine which image URL to use based on the screen size
+  const getImageUrl = (): string => {
+    if (posts[currentIndex] && posts[currentIndex].media) {
+      if (isLargeScreen) {
+        return posts[currentIndex].media.urls.full;
+      } else if (isMediumScreen) {
+        return posts[currentIndex].media.urls.regular;
+      } else if (isSmallScreen) {
+        return posts[currentIndex].media.urls.small;
+      }
+      return posts[currentIndex].media.urls.full; // Fallback to full if no match
+    }
+    return 'Image Not found'; // Ensure this returns a valid string
+  };
+
+  // Determine the width and height of the image based on screen size
+  const getImageDimensions = () => {
+    if (isLargeScreen) {
+      return { width: 1100, height: 800, bgHeight: "1800px", bgWidth: "1200px" };
+    } else if (isMediumScreen) {
+      return { width: 700, height: 500, bgHeight: "1800px", bgWidth: "1200px" };
+    } else if (isSmallScreen) {
+      return { width: 400, height: 300, bgHeight: "1800px", bgWidth: "1200px" };
+    }
+    return { width: 1200, height: 800 }; // Default to large dimensions
+  };
+
+  const { width, height, bgHeight, bgWidth } = getImageDimensions();
 
   return (
     <Box className={styles.pageContainer}>
@@ -47,13 +81,13 @@ const Home = () => {
             >
               <Box
                 sx={{
-                  backgroundImage: `url(${posts[currentIndex].media.urls.full})`,
+                  backgroundImage: `url(${getImageUrl()})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   position: "absolute",
-                  width: "101%",
-                  height: "1300px",
-                  filter: "blur(8px)", // Apply the blur effect here
+                  width: bgWidth,
+                  height: bgHeight,
+                  filter: "blur(8px)",
                   zIndex: 1,
                 }}
               />
@@ -64,11 +98,11 @@ const Home = () => {
                   alignItems: "center",
                 }}
               >
-                <img
-                  src={posts[currentIndex].media.urls.full}
+                <Image
+                  src={getImageUrl()}
                   alt={`Media for ${posts[currentIndex].title}`}
-                  width={1100}
-                  height={800}
+                  width={width}
+                  height={height}
                 />
               </Box>
             </Box>
@@ -130,7 +164,7 @@ const Home = () => {
               <Box className={styles.createdAt}>
                 <Typography
                   variant="body2"
-                > Posted on {convertEpochToDate(posts[currentIndex].media.statistics.created)}</Typography>
+                >{`Posted on ${convertEpochToDate(posts[currentIndex].media.statistics.created)}`}</Typography>
               </Box>
             )}
           </Box>

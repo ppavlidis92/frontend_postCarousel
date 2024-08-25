@@ -7,6 +7,8 @@ interface Media {
   urls: {
     thumb: string;
     full: string;
+    regular: string;
+    small: string;
   };
   type: string;
   statistics: {
