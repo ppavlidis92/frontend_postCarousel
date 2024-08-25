@@ -3,21 +3,10 @@
 import React, { useEffect } from "react";
 import { Typography, Box, useMediaQuery } from "@mui/material";
 import styles from "./page.module.css";
-import useFetchPostsData from "./utils/useFetchPostsData";
-import { convertEpochTime } from "./utils";
-import PostImage from "./components/postImage/PostImage";
-import PostInfo from "./components/postInfo/PostInfo";
+import { convertEpochTime, getImageDimensions, useFetchPostsData } from "../utils";
+import PostImage from "../components/postImage/PostImage";
+import PostInfo from "../components/postInfo/PostInfo";
 
-const getImageDimensions = (isLargeScreen: boolean, isMediumScreen: boolean, isSmallScreen: boolean) => {
-  if (isLargeScreen) {
-    return { width: 1100, height: 800, bgHeight: "1800px", bgWidth: "1200px" };
-  } else if (isMediumScreen) {
-    return { width: 700, height: 500, bgHeight: "1800px", bgWidth: "1200px" };
-  } else if (isSmallScreen) {
-    return { width: 400, height: 300, bgHeight: "1800px", bgWidth: "1200px" };
-  }
-  return { width: 1200, height: 800, bgHeight: "1800px", bgWidth: "1200px" }; // Default to large dimensions
-};
 
 const Home = () => {
   const { posts, currentIndex, setCurrentIndex, setOffset } = useFetchPostsData();
@@ -60,7 +49,6 @@ const Home = () => {
   if (!posts[currentIndex]) {
     return <Typography>Loading...</Typography>;
   }
-
   return (
     <Box className={styles.pageContainer}>
       <Box className={styles.container} display="flex" alignItems="center" justifyContent="center">

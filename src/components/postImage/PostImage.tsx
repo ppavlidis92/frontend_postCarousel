@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import Image from "next/image";
+import styles from "./styles.module.css";
 
 interface PostImageProps {
   imageUrl: string;
@@ -13,14 +14,14 @@ interface PostImageProps {
 
 const PostImage: React.FC<PostImageProps> = ({ imageUrl, width, height, bgWidth, bgHeight, title }) => {
   return (
-    <Box
+    <Box className={styles.outerPhotoContainer} 
       position="relative"
       height="800px"
       display="flex"
       justifyContent="center"
       alignItems="center"
     >
-      <Box
+      <Box className={styles.photoContainer} 
         sx={{
           backgroundImage: `url(${imageUrl})`,
           backgroundSize: "cover",

@@ -1,0 +1,229 @@
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
+  
+  .container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #f2f2f2;
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .outerPhotoContainer{
+    height: 100%;
+    width: 60%;
+  }
+  
+  .photoContainer {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-width: 100%;
+  }
+  
+  .mediaImage {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .postInfoContainer {
+    flex: 1;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-left: 5px solid rgb(65, 65, 65);
+    border-top: 42px solid rgb(65, 65, 65);
+    z-index: 2;
+    width: 40%;
+  }
+  
+  .profileContainer {
+    position: absolute;
+    align-items: center;
+    top: 2%;
+    right: 1%;
+  }
+  
+  .profileName {
+    color: #424242;
+    font-size: 16px;
+    font-weight: 450;
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .userName {
+    font-weight: bold;
+  }
+  
+  .postTitle {
+    color: #555;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-left: 5px;
+  }
+  
+  .postDescription {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #555;
+    margin-left: 5px;
+  }
+  
+  .likesContainer {
+    display: flex;
+    flex-direction: row;
+    margin-top: 300px;
+    margin-left: 5px;
+  }
+  
+  .likes {
+    color: black;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 5px;
+    margin-left: 15px;
+  }
+  
+  .createdAt {
+    margin: 5px;
+    margin-top: 100px;
+  }
+  
+  /* Large screens (desktops) */
+  @media (min-width: 1200px) {
+    .postTitle {
+      font-size: 28px;
+    }
+  
+    .postDescription {
+      font-size: 20px;
+    }
+  
+    .avatar {
+      width: 60px;
+      height: 60px;
+    }
+  
+    .likesContainer {
+      margin-top: 320px;
+    }
+  
+    .createdAt {
+      margin-top: 100px;
+    }
+  }
+  
+  /* Medium screens (tablets) */
+  @media (max-width: 1199px) and (min-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .avatar {
+      width: 45px;
+      height: 45px;
+    }
+  
+    .photoContainer {
+      flex: none;
+      height: 60%;
+      width: 100%;
+    }
+  
+    .postInfoContainer {
+      flex: none;
+      height: 40%;
+      width: 100%;
+    }
+  
+    .postTitle {
+      font-size: 22px;
+      margin: 20px;
+    }
+  
+    .postDescription {
+      font-size: 16px;
+      margin: 0px;
+    }
+  
+    .likesContainer {
+      margin-top: 100px;
+      margin-left: 20px;
+    }
+  
+    .createdAt {
+      margin-top: 20px;
+      margin-left: 20px;
+    }
+  }
+  
+  /* Small screens (mobile phones) */
+  @media (max-width: 767px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .profileContainer {
+      position: absolute;
+      align-items: center;
+      top: 0%;
+      right: 0%;
+    }
+  
+    .photoContainer {
+      flex: none;
+      height: 50%;
+      width: 100%;
+    }
+  
+    .postInfoContainer {
+      flex: none;
+      height: 50%;
+      width: 100%;
+    }
+  
+    .postTitle {
+      font-size: 18px;
+      margin: 20px;
+    }
+  
+    .postDescription {
+      font-size: 14px;
+      margin: 20px;
+    }
+  
+    .avatar {
+      width: 40px;
+      height: 40px;
+    }
+  
+    .likesContainer {
+      margin: 20px;
+      margin-left: 20px;
+      margin-top: 80px;
+    }
+  
+    .createdAt {
+      margin-top: 10px;
+      margin-left: 20px;
+    }
+  }
+  

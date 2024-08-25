@@ -8,12 +8,11 @@ export const fetchUserByUsername = async (username: string): Promise<User | null
     const userResponse = await axios.get(
       `https://apis.slstice.com/mock/users/${username}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
-    
     // Assuming extractUser returns an array of users
-    const usersData: User[] = extractUser(userResponse.data);
+    const usersData = extractUser(userResponse.data);
     
-    if (usersData.length > 0) {
-      return usersData[0]; // Return the first user in the array
+    if (usersData) {
+      return usersData; // Return the first user in the array
     } else {
       console.warn(`No user found with username ${username}`);
       return null;

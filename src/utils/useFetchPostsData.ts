@@ -2,44 +2,11 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchPosts } from "../services/postsApiService";
 import { fetchMediaById } from "../services/mediaApiService";
 import { fetchUserByUsername } from "../services/userApiService";
+import { UnifiedPost } from "./types";
 
-interface Media {
-  urls: {
-    thumb: string;
-    full: string;
-    regular: string;
-    small: string;
-  };
-  type: string;
-  statistics: {
-    likes: number;
-    created: number;
-  };
-}
 
-interface User {
-  first_name: string;
-  last_name: string;
-  profile_images: {
-    small: string;
-    medium: string;
-    full: string;
-  };
-}
-
-interface Post {
-  title: string;
-  description: string;
-  mediaId: string;
-  user: {
-    username: string;
-  };
-  media?: Media;
-  userData?: User;
-}
-
-const useFetchPostsData = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+export const useFetchPostsData = () => {
+  const [posts, setPosts] = useState<UnifiedPost[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [offset, setOffset] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
@@ -105,5 +72,3 @@ const useFetchPostsData = () => {
 
   return { posts, currentIndex, setCurrentIndex, loading, setOffset };
 };
-
-export default useFetchPostsData;

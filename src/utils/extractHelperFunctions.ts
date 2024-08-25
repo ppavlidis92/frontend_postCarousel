@@ -10,6 +10,6 @@ export const extractMedia = (data: ApiResponse): Media | null => {
   return data?.response?.media || null;
 };
 // Helper function to extract the 'user' array from the API response
-export const extractUser = (data: ApiResponse): User[] => {
-  return data?.response?.user || [];
+export const extractUser = (data: ApiResponse): User | null => {
+  return data?.response?.user || null;
 };
