@@ -1,4 +1,4 @@
-  export const convertEpochToDate = (epochTime) => {
+  export const convertEpochTime = (epochTime: number) => {
     // Convert the epoch time (which is in seconds) to milliseconds
     const date = new Date(epochTime * 1000);
   

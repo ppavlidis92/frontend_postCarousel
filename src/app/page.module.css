@@ -26,7 +26,7 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  max-width: fit-content;
+  width: 60%;
 }
 
 .mediaImage {
@@ -44,7 +44,7 @@
   border-left: 5px solid rgb(65, 65, 65);
   border-top: 42px solid rgb(65, 65, 65);
   z-index: 2;
-  min-width: 50%;
+  width: 40%;
 }
 
 .profileContainer {

@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import { Typography, Box, Avatar, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import styles from "./page.module.css";
-import useFetchPostsData from "./components/useFetchPostsData";
-import { convertEpochToDate } from "./utils";
+import useFetchPostsData from "./utils/useFetchPostsData";
+import { convertEpochTime } from "./utils";
 
 const Home = () => {
   const { posts, currentIndex, setCurrentIndex, setOffset } =
@@ -25,7 +25,7 @@ const Home = () => {
           // When the last post is displayed, load the next set of posts
           setOffset((prevOffset) => prevOffset + 1);
         }
-      }, 16000); // Display each post for 6 seconds
+      }, 6000); // Display each post for 6 seconds
 
       return () => clearInterval(intervalId);
     }
@@ -69,6 +69,7 @@ const Home = () => {
           alignItems="center"
           justifyContent="center"
         >
+          <Box className={styles.photoContainer}>
           {posts[currentIndex].media && (
             <Box
               className={styles.photoContainer}
@@ -81,7 +82,7 @@ const Home = () => {
             >
               <Box
                 sx={{
-                  backgroundImage: `url(${getImageUrl()})`,
+                  backgroundImage: `url(${getImageUrl()})`,  // 
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   position: "absolute",
@@ -107,7 +108,7 @@ const Home = () => {
               </Box>
             </Box>
           )}
-
+</Box>
           <Box className={styles.postInfoContainer} flex="1" padding={2}>
             {posts[currentIndex].userData && (
               <Box
@@ -164,7 +165,7 @@ const Home = () => {
               <Box className={styles.createdAt}>
                 <Typography
                   variant="body2"
-                >{`Posted on ${convertEpochToDate(posts[currentIndex].media.statistics.created)}`}</Typography>
+                >{`Posted on ${convertEpochTime(posts[currentIndex].media.statistics.created)}`}</Typography>
               </Box>
             )}
           </Box>
