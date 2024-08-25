@@ -1,25 +1,4 @@
-interface Post {
-  id: string;
-  title: string;
-}
-
-interface Media {
-  id: string;
-  url: string;
-}
-
-interface User {
-  id: string;
-  name: string;
-}
-
-interface ApiResponse {
-  response?: {
-    posts?: Post[];
-    media?: Media[];
-    user?: User[];
-  };
-}
+import { ApiResponse, Post, Media, User } from './types';
 
 // Helper function to extract the 'posts' array from the API response
 export const extractPosts = (data: ApiResponse): Post[] => {
@@ -27,10 +6,9 @@ export const extractPosts = (data: ApiResponse): Post[] => {
 };
 
 // Helper function to extract the 'media' array from the API response
-export const extractMedia = (data: ApiResponse): Media[] => {
-  return data?.response?.media || [];
+export const extractMedia = (data: ApiResponse): Media | null => {
+  return data?.response?.media || null;
 };
-
 // Helper function to extract the 'user' array from the API response
 export const extractUser = (data: ApiResponse): User[] => {
   return data?.response?.user || [];

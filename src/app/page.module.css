@@ -19,14 +19,16 @@
   border-radius: 0;
   overflow: hidden;
 }
+.outerPhotoContainer{
+  height: 100%;
+  width: 60%;
+}
 
 .photoContainer {
-  flex: 2;
-  position: relative;
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 60%;
+  min-width: 100%;
 }
 
 .mediaImage {

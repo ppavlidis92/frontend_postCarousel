@@ -1,21 +1,15 @@
 import axios from "axios";
 import { extractPosts } from "../utils";
-
-interface Post {
-  title: string;
-  description: string;
-  mediaId: string;
-  user: {
-    username: string;
-  };
-}
+import { Post } from '../utils/types';
 
 export const fetchPosts = async (setOffSet: number): Promise<Post[]> => {
   try {
     // Fetch all posts
+    console.log(setOffSet);
     const postsResponse = await axios.get(
       `https://apis.slstice.com/mock/posts?offset=${setOffSet}&limit=20&api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
+    console.log(setOffSet);
     const postsData: Post[] = extractPosts(postsResponse.data);
 
     return postsData;
