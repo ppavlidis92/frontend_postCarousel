@@ -24,7 +24,7 @@ const Home = () => {
         } else {
           setOffset((prevOffset) => prevOffset + 1);
         }
-      }, 16000); // Display each post for 6 seconds
+      }, 6000); // Display each post for 6 seconds
 
       return () => clearInterval(intervalId);
     }
