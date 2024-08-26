@@ -7,12 +7,10 @@ interface PostImageProps {
   imageUrl: string;
   width: number;
   height: number;
-  bgWidth: string;
-  bgHeight: string;
   title: string;
 }
 
-const PostImage: React.FC<PostImageProps> = ({ imageUrl, width, height, bgWidth, bgHeight, title }) => {
+const PostImage: React.FC<PostImageProps> = ({ imageUrl, width, height, title }) => {
   return (
     <Box className={styles.outerPhotoContainer} 
       position="relative"
@@ -27,8 +25,8 @@ const PostImage: React.FC<PostImageProps> = ({ imageUrl, width, height, bgWidth,
           backgroundSize: "cover",
           backgroundPosition: "center",
           position: "absolute",
-          width: bgWidth,
-          height: bgHeight,
+          width: "1200px",
+          height: "1400px",
           filter: "blur(8px)",
           zIndex: 1,
         }}

@@ -24,7 +24,7 @@ const Home = () => {
         } else {
           setOffset((prevOffset) => prevOffset + 1);
         }
-      }, 6000); // Display each post for 6 seconds
+      }, 16000); // Display each post for 6 seconds
 
       return () => clearInterval(intervalId);
     }
@@ -41,10 +41,10 @@ const Home = () => {
       }
       return posts[currentIndex].media.urls.full; // Fallback to full if no match
     }
-    return "/default-image.png"; // Ensure this returns a valid string
+    return "/default-image.png"; // Default image returned in case we have no post image // currently not working
   };
 
-  const { width, height, bgHeight, bgWidth } = getImageDimensions(isLargeScreen, isMediumScreen, isSmallScreen);
+  const { width, height } = getImageDimensions(isLargeScreen, isMediumScreen, isSmallScreen);
 
   if (!posts[currentIndex]) {
     return <Typography>Loading...</Typography>;
@@ -56,8 +56,6 @@ const Home = () => {
           imageUrl={getImageUrl()}
           width={width}
           height={height}
-          bgWidth={bgWidth}
-          bgHeight={bgHeight}
           title={posts[currentIndex].title || "Untitled"}
         />
         <PostInfo
