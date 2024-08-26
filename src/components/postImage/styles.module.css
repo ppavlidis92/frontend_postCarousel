@@ -1,0 +1,39 @@
+.outerPhotoContainer {
+  height: 100%;
+  width: 60%;
+}
+
+.photoContainer {
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-width: 100%;
+}
+
+/* Medium screens (tablets) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .outerPhotoContainer {
+    height: 100%;
+    width: 100%;
+  }
+  
+  .photoContainer {
+    flex: none;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+/* Small screens (mobile phones) */
+@media (max-width: 767px) {
+  .outerPhotoContainer {
+    height: 100%;
+    width: 100%;
+  }
+  
+  .photoContainer {
+    flex: none;
+    height: 120%;
+    width: 120%;
+  }
+}

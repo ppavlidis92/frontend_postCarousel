@@ -2,36 +2,11 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchPosts } from "../services/postsApiService";
 import { fetchMediaById } from "../services/mediaApiService";
 import { fetchUserByUsername } from "../services/userApiService";
+import { UnifiedPost } from "./types";
 
-interface Media {
-  urls: {
-    thumb: string;
-  };
-  type: string;
-  statistics: {
-    likes: number;
-  };
-}
 
-interface User {
-  first_name: string;
-  last_name: string;
-  email: string;
-}
-
-interface Post {
-  title: string;
-  description: string;
-  mediaId: string;
-  user: {
-    username: string;
-  };
-  media?: Media;
-  userData?: User;
-}
-
-const useFetchPostsData = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+export const useFetchPostsData = () => {
+  const [posts, setPosts] = useState<UnifiedPost[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [offset, setOffset] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
@@ -71,7 +46,9 @@ const useFetchPostsData = () => {
           const mediaData = await fetchMediaById(post.mediaId);
           if (mediaData) {
             setPosts((prevPosts) =>
-              prevPosts.map((p, i) => (i === currentIndex ? { ...p, media: mediaData } : p))
+              prevPosts.map((p, i) =>
+                i === currentIndex ? { ...p, media: mediaData } : p
+              )
             );
           }
         }
@@ -81,7 +58,9 @@ const useFetchPostsData = () => {
           const userData = await fetchUserByUsername(post.user.username);
           if (userData) {
             setPosts((prevPosts) =>
-              prevPosts.map((p, i) => (i === currentIndex ? { ...p, userData: userData } : p))
+              prevPosts.map((p, i) =>
+                i === currentIndex ? { ...p, userData: userData } : p
+              )
             );
           }
         }
@@ -93,5 +72,3 @@ const useFetchPostsData = () => {
 
   return { posts, currentIndex, setCurrentIndex, loading, setOffset };
 };
-
-export default useFetchPostsData;

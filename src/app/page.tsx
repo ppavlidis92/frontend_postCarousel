@@ -1,13 +1,20 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Typography } from "@mui/material";
-import Image from "next/image";
+import { Typography, Box, useMediaQuery } from "@mui/material";
 import styles from "./page.module.css";
-import useFetchPostsData from "./components/useFetchPostsData";
+import { convertEpochTime, getImageDimensions, useFetchPostsData } from "../utils";
+import PostImage from "../components/postImage/PostImage";
+import PostInfo from "../components/postInfo/PostInfo";
+
 
 const Home = () => {
   const { posts, currentIndex, setCurrentIndex, setOffset } = useFetchPostsData();
+
+  // Media queries for different screen sizes
+  const isLargeScreen = useMediaQuery("(min-width:1200px)");
+  const isMediumScreen = useMediaQuery("(min-width:768px) and (max-width:1199px)");
+  const isSmallScreen = useMediaQuery("(max-width:767px)");
 
   useEffect(() => {
     if (posts.length > 0) {
@@ -15,54 +22,51 @@ const Home = () => {
         if (currentIndex < posts.length - 1) {
           setCurrentIndex((prevIndex) => prevIndex + 1);
         } else {
-          // When the last post is displayed, load the next set of posts
           setOffset((prevOffset) => prevOffset + 1);
         }
-      }, 6000); // Display each post for 6 seconds
+      }, 16000); // Display each post for 6 seconds
 
       return () => clearInterval(intervalId);
     }
   }, [currentIndex, posts.length, setCurrentIndex, setOffset]);
 
+  const getImageUrl = (): string => {
+    if (posts[currentIndex]?.media) {
+      if (isLargeScreen) {
+        return posts[currentIndex].media.urls.full;
+      } else if (isMediumScreen) {
+        return posts[currentIndex].media.urls.regular;
+      } else if (isSmallScreen) {
+        return posts[currentIndex].media.urls.small;
+      }
+      return posts[currentIndex].media.urls.full; // Fallback to full if no match
+    }
+    return "/default-image.png"; // Default image returned in case we have no post image // currently not working
+  };
+
+  const { width, height } = getImageDimensions(isLargeScreen, isMediumScreen, isSmallScreen);
+
+  if (!posts[currentIndex]) {
+    return <Typography>Loading...</Typography>;
+  }
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <div>
-          {posts && posts.length > 0 && posts[currentIndex] ? (
-            <div>
-              {posts[currentIndex].title ? (
-                <Typography variant="h6">{posts[currentIndex].title}</Typography>
-              ) : (
-                <Typography variant="h6">Untitled</Typography>
-              )}
-              {posts[currentIndex].description ? (
-                <Typography variant="body2">{posts[currentIndex].description}</Typography>
-              ) : (
-                <Typography variant="body2">No Description</Typography>
-              )}
-              {posts[currentIndex].media && (
-                <div>
-                  <Image
-                    src={posts[currentIndex].media.urls.thumb}
-                    alt={`Media for ${posts[currentIndex].title}`}
-                    width={100}
-                    height={100}
-                  />
-                  <Typography>{`Likes: ${posts[currentIndex].media.statistics.likes}`}</Typography>
-                </div>
-              )}
-              {posts[currentIndex].userData && (
-                <div>
-                  <Typography variant="body2">{`Posted by: ${posts[currentIndex].userData.first_name} ${posts[currentIndex].userData.last_name}`}</Typography>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Typography>Loading...</Typography>
-          )}
-        </div>
-      </div>
-    </main>
+    <Box className={styles.pageContainer}>
+      <Box className={styles.container} display="flex" alignItems="center" justifyContent="center">
+        <PostImage
+          imageUrl={getImageUrl()}
+          width={width}
+          height={height}
+          title={posts[currentIndex].title || "Untitled"}
+        />
+        <PostInfo
+          userData={posts[currentIndex].userData}
+          title={posts[currentIndex].title || "Untitled"}
+          description={posts[currentIndex].description || "No Description"}
+          likes={posts[currentIndex].media?.statistics.likes || 0}
+          createdAt={convertEpochTime(posts[currentIndex].media?.statistics.created || 0)}
+        />
+      </Box>
+    </Box>
   );
 };
 
